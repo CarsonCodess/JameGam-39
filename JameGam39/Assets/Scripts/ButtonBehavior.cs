@@ -5,7 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class ButtonBehavior : MonoBehaviour
 {
-    public void LoadGame(){
-        SceneManager.LoadScene(0);
+    [SerializeField] private string mainScene = "Main";
+    public void LoadGame()
+    {
+        SceneManager.LoadScene(mainScene);
     }
 }
