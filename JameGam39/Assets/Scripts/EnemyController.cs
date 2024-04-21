@@ -10,6 +10,7 @@ public class EnemyController : Damageable
     private Animator _anim;
     private bool _canAttack = true;
     private float _attackTimer;
+    private string _currentAnimation;
 
     protected override void Awake()
     {
@@ -39,12 +40,29 @@ public class EnemyController : Damageable
             var player = _target.GetComponent<Player>();
             if(player.IsDead())
                 return;
-            _anim.Play("LizardAttack");
+            PlayAnim("LizardAttack");
             player.Damage();
             _attackTimer = attackTime;
             _canAttack = false;
         }
         else if(Vector2.Distance(transform.position, _target.position) > _agent.stoppingDistance)
-            _anim.Play("LizardWalk");
+            PlayAnim("LizardWalk");
+    }
+    
+    private void PlayAnim(string anim)
+    {
+        if (_currentAnimation == "LizardAttack")
+        {
+            if (_anim.GetCurrentAnimatorStateInfo(0).IsName("LizardAttack"))
+                return;
+            else
+                _currentAnimation = "";
+        }
+
+        if (_currentAnimation != anim)
+        {
+            _anim.Play(anim);
+            _currentAnimation = anim;
+        }
     }
 }
