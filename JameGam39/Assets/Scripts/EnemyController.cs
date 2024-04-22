@@ -35,7 +35,7 @@ public class EnemyController : Damageable
             _attackTimer -= Time.deltaTime;
         if (_attackTimer <= 0f)
             _canAttack = true;
-        if (Vector2.Distance(transform.position, _target.position) <= _agent.stoppingDistance && _canAttack)
+        if (Vector2.Distance(transform.position, _target.position) <= _agent.stoppingDistance * 1.5f && _canAttack)
         {
             var player = _target.GetComponent<Player>();
             if(player.IsDead())
