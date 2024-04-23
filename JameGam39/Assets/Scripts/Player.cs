@@ -13,7 +13,7 @@ public class Player : Damageable
     [SerializeField] private Sprite emptyHeart;
     
     private Rigidbody2D _rb;
-    private Animator _anim;
+    private SpriteAnimator _anim;
     private string _currentAnimation;
     private bool _canMove = true;
 
@@ -21,7 +21,7 @@ public class Player : Damageable
     {
         base.Awake();
         _rb = GetComponent<Rigidbody2D>();
-        _anim = GetComponent<Animator>();
+        _anim = GetComponentInChildren<SpriteAnimator>();
         Application.targetFrameRate = 60;
     }
 
@@ -54,6 +54,17 @@ public class Player : Damageable
     public override void Damage(float amount)
     {
         base.Damage(amount);
+        UpdateUI();
+    }
+
+    public override void Heal()
+    {
+        base.Heal();
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
         var tempHealth = health;
         foreach (var heart in hearts)
         {
@@ -100,7 +111,7 @@ public class Player : Damageable
             return;
         if (_currentAnimation != anim)
         {
-            _anim.Play(anim);
+            _anim.SwitchAnimation(anim);
             _currentAnimation = anim;
         }
     }
