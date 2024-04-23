@@ -11,4 +11,9 @@ public class ButtonBehavior : MonoBehaviour
     {
         SceneManager.LoadScene(mainScene);
     }
+    
+    public void Quit() 
+    {
+        Application.Quit();
+    }
 }
