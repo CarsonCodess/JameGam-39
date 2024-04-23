@@ -23,7 +23,7 @@ public abstract class Damageable : MonoBehaviour
     
     public virtual void Heal()
     {
-        health += 0.5f;
+        Heal(0.5f);
     }
     
     public virtual void Heal(float amount)
