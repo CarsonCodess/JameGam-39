@@ -29,7 +29,7 @@ public class EnemyController : Damageable
         if (_agent.velocity.x < 0)
             transform.localScale = new Vector3(-1, 1, 1);
         else if (_agent.velocity.x > 0)
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(1, 1, 1); 
 
         if (!_canAttack)
             _attackTimer -= Time.deltaTime;
