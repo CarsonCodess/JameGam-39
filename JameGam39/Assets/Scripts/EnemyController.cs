@@ -5,6 +5,7 @@ using UnityEngine.AI;
 public class EnemyController : Damageable
 {
     [SerializeField] private float attackTime = 1f;
+    [SerializeField] private float damage = 0.5f;
     private Transform _target;
     private NavMeshAgent _agent;
     private SpriteAnimator _anim;
@@ -41,7 +42,7 @@ public class EnemyController : Damageable
             if(player.IsDead())
                 return;
             PlayAnim("Attack");
-            player.Damage();
+            player.Damage(damage);
             _attackTimer = attackTime;
             _canAttack = false;
         }
