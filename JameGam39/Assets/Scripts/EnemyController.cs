@@ -36,7 +36,7 @@ public class EnemyController : Damageable
             _attackTimer -= Time.deltaTime;
         if (_attackTimer <= 0f)
             _canAttack = true;
-        if (Vector2.Distance(transform.position, _target.position) <= _agent.stoppingDistance * 1.5f && _canAttack)
+        if (Vector2.Distance(transform.position, _target.position) <= _agent.stoppingDistance * 1.5f && _canAttack && _currentAnimation != "Death")
         {
             var player = _target.GetComponent<Player>();
             if(player.IsDead())
@@ -48,10 +48,33 @@ public class EnemyController : Damageable
         }
         else if(Vector2.Distance(transform.position, _target.position) > _agent.stoppingDistance)
             PlayAnim("Walk");
+        if (_anim.GetCurrentAnimation() == "Destroy")
+        {
+            _currentAnimation = "";
+            WaveManager.instance.EnemyKilled();
+            Destroy(gameObject);
+        }
     }
-    
+
+    public override void Damage(float amount)
+    {
+        base.Damage(amount);
+        if (health <= 0)
+        {
+            _anim.SwitchAnimation("Death");
+            _currentAnimation = "Death";
+        }
+        else
+        {
+            _anim.SwitchAnimation("Hurt");
+            _currentAnimation = "Hurt";
+        }
+    }
+
     private void PlayAnim(string anim)
     {
+        if(_currentAnimation is "Death" or "Hurt")
+            return;
         if (_currentAnimation == "Attack")
         {
             if (_anim.GetCurrentAnimation() == "Attack")

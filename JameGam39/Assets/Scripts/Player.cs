@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using DG.Tweening;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,11 +14,19 @@ public class Player : Damageable
     [SerializeField] private Sprite fullHeart;
     [SerializeField] private Sprite halfHeart;
     [SerializeField] private Sprite emptyHeart;
+    [Header("Weapons")] 
+    [SerializeField] private Transform sword;
+    [SerializeField] private float swordBobSpeed;
+    [SerializeField] private float swordAttackTime;
+    [SerializeField] private float swordDamage;
     
     private Rigidbody2D _rb;
     private SpriteAnimator _anim;
     private string _currentAnimation;
     private bool _canMove = true;
+    private bool _canAttack = true;
+    private float _attackTimer;
+    private List<EnemyController> _enemies = new List<EnemyController>();
 
     protected override void Awake()
     {
@@ -45,10 +56,47 @@ public class Player : Damageable
             Decelerate(accelerationTime * 1000);
         }
         else
+        {
             PlayAnim("Walk");
+            var minY = -0.25f;
+            var maxY = -0.15f;
+            var yPosition = minY + (Mathf.Sin(Time.time * swordBobSpeed) * 0.5f + 0.5f) * (maxY - minY);
+            sword.transform.position = new Vector2(sword.transform.position.x, yPosition + transform.position.y);
+        }
         
-        if(Input.GetKeyDown(KeyCode.T))
-            Damage();
+        if (!_canAttack)
+            _attackTimer -= Time.deltaTime;
+        if (_attackTimer <= 0f)
+            _canAttack = true;
+
+        if(Input.GetMouseButtonDown(0) && _canAttack)
+        {
+            _attackTimer = swordAttackTime;
+            _canAttack = false;
+            if (transform.localScale == new Vector3(1, 1, 1))
+            {
+                sword.DORotate(new Vector3(0, 0, 60), 0.35f).SetEase(Ease.OutQuad).OnComplete(() =>
+                {
+                    sword.DORotate(new Vector3(0, 0, -40), 0.1f).SetEase(Ease.OutQuad).OnComplete(() =>
+                    {
+                        sword.DORotate(new Vector3(0, 0, 30), 0.4f).SetEase(Ease.OutQuad);
+                    });
+                });
+            }
+            else
+            {
+                sword.DORotate(new Vector3(0, 0, -60), 0.35f).SetEase(Ease.OutQuad).OnComplete(() =>
+                {
+                    sword.DORotate(new Vector3(0, 0, 40), 0.1f).SetEase(Ease.OutQuad).OnComplete(() =>
+                    {
+                        sword.DORotate(new Vector3(0, 0, -30), 0.4f).SetEase(Ease.OutQuad);
+                    });
+                });
+            }
+
+            foreach (var enemy in _enemies)
+                enemy.Damage(swordDamage);
+        }
     }
 
     public override void Damage(float amount)
@@ -114,5 +162,17 @@ public class Player : Damageable
             _anim.SwitchAnimation(anim);
             _currentAnimation = anim;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.CompareTag("Enemy"))
+            _enemies.Add(other.GetComponent<EnemyController>());
+    }
+    
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.CompareTag("Enemy") && _enemies.Contains(other.GetComponent<EnemyController>()))
+            _enemies.Remove(other.GetComponent<EnemyController>());
     }
 }
