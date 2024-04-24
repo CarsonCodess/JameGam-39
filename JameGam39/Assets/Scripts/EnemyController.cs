@@ -25,7 +25,7 @@ public class EnemyController : Damageable
 
     private void Update()
     {
-        if (_anim.GetCurrentAnimation() is "Death" or "Hurt")
+        if (_anim.GetCurrentAnimation() is "Death")
             _agent.isStopped = true;
         _agent.SetDestination(_target.position);
         

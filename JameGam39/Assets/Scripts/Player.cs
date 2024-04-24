@@ -99,7 +99,7 @@ public class Player : Damageable
             switch (_currentSpell)
             {
                 case 0:
-                    if(!_canTeleport)
+                    if(!_canTeleport || _anim.GetCurrentAnimation() == "Death")
                         return;
                     PlayAnim("Teleport");
                     Invoke(nameof(Teleport), 0.4f);
@@ -177,8 +177,12 @@ public class Player : Damageable
 
     private void PlayAnim(string anim)
     {
-        if(_anim.GetCurrentAnimation() is "Death" or "Attack" or "Teleport")
-            return;
+        if (_anim.GetCurrentAnimation() is "Death" or "Attack" or "Teleport")
+        {
+            if(anim != "Death")
+                return;
+        }
+
         if (_currentAnimation != anim)
         {
             _anim.SwitchAnimation(anim);
