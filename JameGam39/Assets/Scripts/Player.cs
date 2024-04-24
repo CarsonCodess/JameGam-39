@@ -21,13 +21,16 @@ public class Player : Damageable
     [Header("Weapons")] 
     [SerializeField] private float baseAttackTime;
     [FormerlySerializedAs("swordDamage")] [SerializeField] private float baseDamage;
+    [Header("Teleport")]
     [SerializeField] private List<Transform> teleportPositions;
+    [SerializeField] private float teleportCooldown;
     
     private Rigidbody2D _rb;
     private SpriteAnimator _anim;
     private string _currentAnimation;
     private bool _canMove = true;
     private bool _canAttack = true;
+    private bool _canTeleport = true;
     private float _attackTimer;
     private List<EnemyController> _enemies = new List<EnemyController>();
     private int _currentSpell;
@@ -42,7 +45,7 @@ public class Player : Damageable
 
     private void Update()
     {
-        if (!_canMove)
+        if (!_canMove || _anim.GetCurrentAnimation() == "Teleport")
             return;
         var inputH = Input.GetAxisRaw("Horizontal");
         var inputV = Input.GetAxisRaw("Vertical");
@@ -96,8 +99,11 @@ public class Player : Damageable
             switch (_currentSpell)
             {
                 case 0:
+                    if(!_canTeleport)
+                        return;
                     PlayAnim("Teleport");
                     Invoke(nameof(Teleport), 0.4f);
+                    _canTeleport = false;
                     break;
             }
         }
@@ -107,6 +113,12 @@ public class Player : Damageable
     {
         var rand = Random.Range(0, teleportPositions.Count);
         transform.position = teleportPositions[rand].position;
+        Invoke(nameof(ResetTeleport), teleportCooldown);
+    }
+
+    private void ResetTeleport()
+    {
+        _canTeleport = true;
     }
 
     public override void Damage(float amount)

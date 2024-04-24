@@ -6474,6 +6474,7 @@ MonoBehaviour:
   - {fileID: 212453986}
   - {fileID: 1154019110}
   - {fileID: 2081900111}
+  teleportCooldown: 2
 --- !u!50 &1575555913
 Rigidbody2D:
   serializedVersion: 4
