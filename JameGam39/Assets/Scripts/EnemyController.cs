@@ -25,6 +25,8 @@ public class EnemyController : Damageable
 
     private void Update()
     {
+        if (_anim.GetCurrentAnimation() is "Death" or "Hurt")
+            _agent.isStopped = true;
         _agent.SetDestination(_target.position);
         
         if (_agent.velocity.x < 0)
@@ -36,7 +38,7 @@ public class EnemyController : Damageable
             _attackTimer -= Time.deltaTime;
         if (_attackTimer <= 0f)
             _canAttack = true;
-        if (Vector2.Distance(transform.position, _target.position) <= _agent.stoppingDistance * 1.5f && _canAttack && _currentAnimation != "Death")
+        if (Vector2.Distance(transform.position, _target.position) <= _agent.stoppingDistance * 1.5f && _canAttack)
         {
             var player = _target.GetComponent<Player>();
             if(player.IsDead())
@@ -73,7 +75,7 @@ public class EnemyController : Damageable
 
     private void PlayAnim(string anim)
     {
-        if(_currentAnimation is "Death" or "Hurt")
+        if(_anim.GetCurrentAnimation() is "Death" or "Hurt" or "Destroy")
             return;
         if (_currentAnimation == "Attack")
         {
