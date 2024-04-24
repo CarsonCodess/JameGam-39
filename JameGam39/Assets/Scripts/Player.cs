@@ -9,6 +9,8 @@ using Random = UnityEngine.Random;
 
 public class Player : Damageable
 {
+    public static Player instance;
+    
     [SerializeField] private float moveSpeed;
     [SerializeField] private float accelerationTime;
     [Header("Health")]
@@ -41,6 +43,7 @@ public class Player : Damageable
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponentInChildren<SpriteAnimator>();
         Application.targetFrameRate = 60;
+        instance = this;
     }
 
     private void Update()
@@ -200,5 +203,11 @@ public class Player : Damageable
     {
         if(other.CompareTag("Enemy") && _enemies.Contains(other.GetComponent<EnemyController>()))
             _enemies.Remove(other.GetComponent<EnemyController>());
+    }
+
+    public void SetCanMove(bool value)
+    {
+        _canMove = value;
+        _rb.velocity = Vector2.zero;
     }
 }

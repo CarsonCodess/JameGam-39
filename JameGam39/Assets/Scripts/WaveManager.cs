@@ -34,8 +34,8 @@ public class WaveManager : MonoBehaviour
 
     private void Update()
     {
-        if(_enemiesKilled >= _enemiesThisRound)
-            NewWave();
+        if (_enemiesKilled >= _enemiesThisRound)
+            UpgradeScreen.instance.DisplayUpgradeScreen();
     }
 
     public void EnemyKilled()
