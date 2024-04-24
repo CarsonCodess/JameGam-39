@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Player : Damageable
 {
@@ -20,6 +21,7 @@ public class Player : Damageable
     [Header("Weapons")] 
     [SerializeField] private float baseAttackTime;
     [FormerlySerializedAs("swordDamage")] [SerializeField] private float baseDamage;
+    [SerializeField] private List<Transform> teleportPositions;
     
     private Rigidbody2D _rb;
     private SpriteAnimator _anim;
@@ -28,6 +30,7 @@ public class Player : Damageable
     private bool _canAttack = true;
     private float _attackTimer;
     private List<EnemyController> _enemies = new List<EnemyController>();
+    private int _currentSpell;
 
     protected override void Awake()
     {
@@ -64,6 +67,19 @@ public class Player : Damageable
         if (_attackTimer <= 0f)
             _canAttack = true;
 
+        if (Input.mouseScrollDelta.y > 0)
+        {
+            _currentSpell++;
+            if (_currentSpell > 4)
+                _currentSpell = 0;
+        }
+        else if (Input.mouseScrollDelta.y < 0)
+        {
+            _currentSpell--;
+            if (_currentSpell < 0)
+                _currentSpell = 4;
+        }
+
         if(Input.GetMouseButtonDown(0) && _canAttack)
         {
             _attackTimer = baseAttackTime;
@@ -74,6 +90,23 @@ public class Player : Damageable
             foreach (var enemy in _enemies)
                 enemy.Damage(baseDamage);
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            switch (_currentSpell)
+            {
+                case 0:
+                    PlayAnim("Teleport");
+                    Invoke(nameof(Teleport), 0.4f);
+                    break;
+            }
+        }
+    }
+
+    private void Teleport()
+    {
+        var rand = Random.Range(0, teleportPositions.Count);
+        transform.position = teleportPositions[rand].position;
     }
 
     public override void Damage(float amount)
@@ -132,7 +165,7 @@ public class Player : Damageable
 
     private void PlayAnim(string anim)
     {
-        if(_anim.GetCurrentAnimation() is "Death" or "Attack")
+        if(_anim.GetCurrentAnimation() is "Death" or "Attack" or "Teleport")
             return;
         if (_currentAnimation != anim)
         {
