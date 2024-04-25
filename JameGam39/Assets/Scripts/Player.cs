@@ -160,7 +160,13 @@ public class Player : Damageable
             _rb.velocity = Vector2.zero;
             _canMove = false;
             PlayAnim("Death");
+            Invoke(nameof(ShowDeath), 1f);
         }
+    }
+
+    private void ShowDeath()
+    {
+        DeathScreen.instance.ShowDeathScreen(WaveManager.instance.EnemiesKilledTotal);
     }
 
     public void Accelerate(float time, Vector2 direction, float maxSpeed)

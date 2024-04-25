@@ -8,6 +8,7 @@ public class WaveManager : MonoBehaviour
 {
     public static WaveManager instance;
     
+    public int EnemiesKilledTotal { get; private set; }
     [SerializeField] private WeightedObjectList<GameObject> enemies = new WeightedObjectList<GameObject>();
     [SerializeField] private List<Transform> spawnPositions = new List<Transform>();
     [SerializeField] private Vector2 randomSpawnTime;
@@ -41,6 +42,7 @@ public class WaveManager : MonoBehaviour
     public void EnemyKilled()
     {
         _enemiesKilled++;
+        EnemiesKilledTotal++;
     }
 
     public void SpawnEnemy()
