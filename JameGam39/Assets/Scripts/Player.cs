@@ -115,7 +115,7 @@ public class Player : Damageable
         if (_attackTimer <= 0f)
             _canAttack = true;
 
-        if (Input.mouseScrollDelta.y > 0)
+        if (Input.mouseScrollDelta.y > 0 || Input.GetKeyDown(KeyCode.T))
         {
             _currentSpell++;
             if (_currentSpell > 2)
