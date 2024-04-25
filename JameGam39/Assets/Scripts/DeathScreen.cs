@@ -8,7 +8,7 @@ public class DeathScreen : MonoBehaviour
 {
     public static DeathScreen instance;
     
-    [SerializeField] private GameObject deathScreen;
+    [SerializeField] public GameObject deathScreen;
     [SerializeField] private TMP_Text enemiesKilledText;
     [SerializeField] private TMP_Text timeText;
     private float _timer;
