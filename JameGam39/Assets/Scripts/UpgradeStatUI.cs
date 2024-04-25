@@ -48,6 +48,8 @@ public class UpgradeStatUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             Player.instance.UnlockTeleport();
         if(_stat.name == "Shield")
             Player.instance.UnlockShield();
+        if(_stat.name == "Dagger")
+            Player.instance.UnlockDagger();
         Player.instance.Damage(float.Parse(_stat.cost.TrimEnd(" HP".ToCharArray())));
         UpgradeScreen.instance.HideUpgradeScreen();
     }
