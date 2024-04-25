@@ -195,6 +195,7 @@ MonoBehaviour:
   maxHealth: 1
   attackTime: 1
   damage: 0.5
+  rosePrefab: {fileID: 6164518171158109181, guid: c74a3c342d05f37418fa562fcf244b38, type: 3}
 --- !u!195 &5525291999525987049
 NavMeshAgent:
   m_ObjectHideFlags: 0

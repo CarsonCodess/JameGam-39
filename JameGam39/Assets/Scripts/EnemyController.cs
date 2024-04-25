@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = System.Random;
 
 public class EnemyController : Damageable
 {
     [SerializeField] private float attackTime = 1f;
     [SerializeField] private float damage = 0.5f;
+    [SerializeField] private GameObject rosePrefab;
     private Transform _target;
     private NavMeshAgent _agent;
     private SpriteAnimator _anim;
@@ -65,6 +67,10 @@ public class EnemyController : Damageable
         {
             _anim.SwitchAnimation("Death");
             _currentAnimation = "Death";
+            int roseIndex = UnityEngine.Random.Range(1, 10);
+            if(roseIndex == 1){
+                Instantiate(rosePrefab, gameObject.transform.position, Quaternion.identity);
+            }
         }
         else
         {
