@@ -46,6 +46,8 @@ public class UpgradeStatUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         if(_stat.name == "Teleport")
             Player.instance.UnlockTeleport();
+        if(_stat.name == "Shield")
+            Player.instance.UnlockShield();
         Player.instance.Damage(float.Parse(_stat.cost.TrimEnd(" HP".ToCharArray())));
         UpgradeScreen.instance.HideUpgradeScreen();
     }

@@ -26,6 +26,7 @@ public class Player : Damageable
     [Header("Teleport")]
     [SerializeField] private List<Transform> teleportPositions;
     [SerializeField] private float teleportCooldown;
+    [SerializeField] private GameObject forceField;
     
     private Rigidbody2D _rb;
     private SpriteAnimator _anim;
@@ -33,10 +34,17 @@ public class Player : Damageable
     private bool _canMove = true;
     private bool _canAttack = true;
     private bool _canTeleport = true;
+    private bool shieldIsActive = false;
+    private bool canUseShield = true;
     private float _attackTimer;
     private List<EnemyController> _enemies = new List<EnemyController>();
     private int _currentSpell;
     private bool _canTeleportUnlocked;
+    private bool shieldIsUnlocked;
+
+    public void UnlockShield(){
+        shieldIsUnlocked = true;
+    }
 
     public void UnlockTeleport()
     {
@@ -114,6 +122,12 @@ public class Player : Damageable
                     Invoke(nameof(Teleport), 0.4f);
                     _canTeleport = false;
                     break;
+                case 1:
+                    if(!canUseShield || _anim.GetCurrentAnimation() == "Death" || !shieldIsUnlocked)
+                        return;
+                    ActivateShield();
+                    break;
+
             }
         }
     }
@@ -132,6 +146,9 @@ public class Player : Damageable
 
     public override void Damage(float amount)
     {
+        if(shieldIsActive){
+            return;
+        }
         base.Damage(amount);
         UpdateUI();
     }
@@ -222,4 +239,22 @@ public class Player : Damageable
         _canMove = value;
         _rb.velocity = Vector2.zero;
     }
+
+    public void ActivateShield(){
+        forceField.SetActive(true);
+        shieldIsActive = true;
+        canUseShield = false;
+        Invoke(nameof(ResetShield), 3f);
+    }
+    
+    public void ResetShield(){
+        forceField.SetActive(false);
+        shieldIsActive = false;
+        Invoke(nameof(ResetShieldCooldown), 18f);
+    }
+
+    public void ResetShieldCooldown(){
+        canUseShield = true;
+    }
+
 }
