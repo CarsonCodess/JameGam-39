@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Dagger
   desc: Summon a homing dagger that follows an enemy.
-  cost: 4 HP
+  cost: 2 HP

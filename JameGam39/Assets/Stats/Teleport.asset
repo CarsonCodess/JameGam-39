@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Teleport
   desc: Teleport to a random spot on the map.
-  cost: 3 HP
+  cost: 1.5 HP

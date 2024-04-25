@@ -36,7 +36,13 @@ public class Player : Damageable
     private float _attackTimer;
     private List<EnemyController> _enemies = new List<EnemyController>();
     private int _currentSpell;
+    private bool _canTeleportUnlocked;
 
+    public void UnlockTeleport()
+    {
+        _canTeleportUnlocked = true;
+    }
+    
     protected override void Awake()
     {
         base.Awake();
@@ -102,7 +108,7 @@ public class Player : Damageable
             switch (_currentSpell)
             {
                 case 0:
-                    if(!_canTeleport || _anim.GetCurrentAnimation() == "Death")
+                    if(!_canTeleport || _anim.GetCurrentAnimation() == "Death" || !_canTeleportUnlocked)
                         return;
                     PlayAnim("Teleport");
                     Invoke(nameof(Teleport), 0.4f);

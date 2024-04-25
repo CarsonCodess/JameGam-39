@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class UpgradeStatUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    [SerializeField] private bool skip;
     [SerializeField] private TMP_Text upgradeName;
     [SerializeField] private TMP_Text upgradeDescription;
     [SerializeField] private TMP_Text upgradeCost;
@@ -37,6 +39,14 @@ public class UpgradeStatUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (skip)
+        {
+            UpgradeScreen.instance.HideUpgradeScreen();
+            return;
+        }
+        if(_stat.name == "Teleport")
+            Player.instance.UnlockTeleport();
+        Player.instance.Damage(float.Parse(_stat.cost.TrimEnd(" HP".ToCharArray())));
         UpgradeScreen.instance.HideUpgradeScreen();
     }
 }

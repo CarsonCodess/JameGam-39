@@ -48,6 +48,9 @@ public class WaveManager : MonoBehaviour
     public void SpawnEnemy()
     {
         var spawnIndex = Random.Range(0, spawnPositions.Count);
-        Instantiate(enemies.GetRandomObject(), spawnPositions[spawnIndex].transform.position, Quaternion.identity);
+        if(_waveNumber >= 7)
+            Instantiate(enemies.GetRandomObject(), spawnPositions[spawnIndex].transform.position, Quaternion.identity);
+        else
+            Instantiate(enemies.GetObject(0), spawnPositions[spawnIndex].transform.position, Quaternion.identity);
     }
 }
